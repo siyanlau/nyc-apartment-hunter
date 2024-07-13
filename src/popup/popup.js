@@ -16,9 +16,9 @@ document.getElementById('addressForm').addEventListener('submit', (e) => {
       const addressList = document.getElementById('addressList');
       addressList.innerHTML = '';
       data.addresses.forEach((address, index) => {
-        const div = document.createElement('div');
-        div.textContent = address;
-        addressList.appendChild(div);
+        const li = document.createElement('li');
+        li.textContent = address;
+        addressList.appendChild(li);
       });
     });
   }
