@@ -6,6 +6,8 @@ nyc-apartment-hunter/
 │   ├── popup/  
 │   │   ├── popup.html  
 │   │   └── popup.js  
+│   ├── api/  
+│   │   ├── fetchComplaintData.js  
 │   └── manifest.json  
 ├── package.json  
 ├── README.md  

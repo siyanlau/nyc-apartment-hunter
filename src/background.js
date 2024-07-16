@@ -51,28 +51,39 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   if (message.action === 'addAddress') {
-    const newAddress = message.address;
-    console.log("background received new address: ", newAddress);
-    const complaints = await fetchComplaintData(newAddress);
-    console.log("complaints: ", complaints);
-
-    chrome.storage.sync.get({ addresses: [] }, (data) => {
-      let addresses = data.addresses;
-      const addressExists = addresses.some(item => item.address === newAddress);
-
-      if (!addressExists) {
-        addresses.push({ address: newAddress, complaints: complaints }); // Append the new address and its complaints to the existing list
-        chrome.storage.sync.set({ addresses: addresses }, () => {
-          sendResponse({ success: true });
-        });
-      } else {
-        sendResponse({ success: false, message: 'Address already exists' });
-      }
-      console.log(data.addresses);
-    });
+    handleAddAddress(message, sendResponse);
   }
-})
+  else if (message.action === 'getAddresses') {
+    chrome.storage.sync.get({ addresses: [] }, (data) => {
+      console.log("addresses stored in background: ", data.addresses);
+      sendResponse(data.addresses);
+    });
+  };
+});
 
+const handleAddAddress = async (message, sendResponse) => {
+  const newAddress = message.address;
+  console.log("background received new address: ", newAddress);
+  const complaints = await fetchComplaintData(newAddress);
+  console.log("complaints: ", complaints);
+
+  chrome.storage.sync.get({ addresses: [] }, (data) => {
+    let addresses = data.addresses;
+    const addressExists = addresses.some(item => item.address === newAddress);
+
+    if (!addressExists) {
+      addresses.push({ address: newAddress, complaints: complaints }); // Append the new address and its complaints to the existing list
+      chrome.storage.sync.set({ addresses: addresses }, () => {
+        sendResponse({ success: true });
+      });
+    } else {
+      sendResponse({ success: true, message: 'Address already exists' });
+    }
+    console.log(data.addresses);
+  });
+
+  return true;
+}
 
 
 async function fetchComplaintData(address) {
