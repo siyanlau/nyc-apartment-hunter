@@ -1,4 +1,4 @@
-import fetchComplaintData from "./api/fetchComplaintData.js"
+import fetchComplaintData from "../api/fetchComplaintData.js"
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
