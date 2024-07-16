@@ -51,7 +51,9 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   const newAddress = message.address;
-  console.log(newAddress);
+  console.log("background received new address: ", newAddress);
+  const complaints = await fetchComplaintData(newAddress);
+  console.log("complaints: ", complaints);
 })
 
 
@@ -59,12 +61,18 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 async function fetchComplaintData(address) {
   try {
     const response = await fetch(`https://data.cityofnewyork.us/resource/jrb2-thup.json?incident_address=${encodeURIComponent(address)}`);
+    console.log(`https://data.cityofnewyork.us/resource/jrb2-thup.json?incident_address=${encodeURIComponent(address)}`);
     if (!response.ok) {
+      console.log("NYC open data response was not ok");
       throw new Error('Network response was not ok');
     }
+    else {
+      console.log("NYC open data connection was ok");
+    }
     const data = await response.json();
-    const simplifiedData = data.map(complaint => ({ descriptor: complaint.descriptor }));
-    return simplifiedData;
+    return data;
+    // const simplifiedData = data.map(complaint => ({ descriptor: complaint.descriptor }));
+    // return simplifiedData;
     // need to do more parsing / cleaning here
   } catch (error) {
     console.error('There was a problem with the fetch operation:', error);
