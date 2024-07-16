@@ -13,11 +13,11 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     // need to do more address standardization here!
     const complaints = await fetchComplaintData(address);
     if (complaints != null) { // this is not the correct way to indicate 'data fetching failed'. needs modifying
-      chrome.storage.sync.get({addresses: []}, (data) => {
+      chrome.storage.sync.get({ addresses: [] }, (data) => {
         // add the highlighted address to address/complaints list
         let addresses = data.addresses;
         addresses.push({ address: address, complaints: complaints });
-        chrome.storage.sync.set({addresses: addresses});
+        chrome.storage.sync.set({ addresses: addresses });
       });
     }
     else {
@@ -50,10 +50,27 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 // });
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-  const newAddress = message.address;
-  console.log("background received new address: ", newAddress);
-  const complaints = await fetchComplaintData(newAddress);
-  console.log("complaints: ", complaints);
+  if (message.action === 'addAddress') {
+    const newAddress = message.address;
+    console.log("background received new address: ", newAddress);
+    const complaints = await fetchComplaintData(newAddress);
+    console.log("complaints: ", complaints);
+
+    chrome.storage.sync.get({ addresses: [] }, (data) => {
+      let addresses = data.addresses;
+      const addressExists = addresses.some(item => item.address === newAddress);
+
+      if (!addressExists) {
+        addresses.push({ address: newAddress, complaints: complaints }); // Append the new address and its complaints to the existing list
+        chrome.storage.sync.set({ addresses: addresses }, () => {
+          sendResponse({ success: true });
+        });
+      } else {
+        sendResponse({ success: false, message: 'Address already exists' });
+      }
+      console.log(data.addresses);
+    });
+  }
 })
 
 
