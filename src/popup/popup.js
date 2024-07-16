@@ -1,18 +1,30 @@
+
+
 document.getElementById('addressForm').addEventListener('submit', (e) => {
   e.preventDefault();
-  const address = document.getElementById('addressInput').value;
-
-  chrome.runtime.sendMessage({ action: 'addAddress', address: address }, (response) => {
-    if (response.success) {
-      document.getElementById('addressInput').value = '';
-      loadAddresses();
-    }
-  });
+  const addressInput = document.getElementById('addressInput').value;
+  // chrome.runtime.sendMessage({ action: 'addAddress', address: addressInput }, (response) => {
+  //   if (response.success) {
+  //     document.getElementById('addressInput').value = ''; // clear the input field
+  //     loadAddresses();
+  //   }
+  //   else {
+  //     console.log("sent address input to background but did not receive response??");
+  //   }
+  // });
+  console.log("front end received address ", addressInput);
+  chrome.runtime.sendMessage({ action: 'addAddress', address: addressInput });
 });
 
 
 function loadAddresses() {
   chrome.runtime.sendMessage({ action: 'getAddresses' }, (addresses) => { // don't want to load addresses every time, needs refactor
+    if (chrome.runtime.lastError) {
+      console.error(chrome.runtime.lastError.message);
+      alert('Failed to load addresses.');
+      return;
+    }
+
     const addressList = document.getElementById('addressList');
     addressList.innerHTML = '';
     addresses.forEach((item) => {

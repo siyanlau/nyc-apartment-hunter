@@ -27,27 +27,33 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 });
 
 
+// chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+//   if (message.action === 'addAddress') {
+//     const address = message.address;
+//     const complaints = await fetchComplaintData(address);
+
+//     chrome.storage.sync.get({addresses: []}, (data) => {
+//       let addresses = data.addresses;
+//       addresses.push({ address: address, complaints: complaints }); // append the new address to existing list
+//       chrome.storage.sync.set({addresses: addresses}, () => {
+//         sendResponse({ success: true });
+//       });
+//     });
+
+//     return true; // Keeps the message channel open for sendResponse
+//   } else if (message.action === 'getAddresses') {
+//     chrome.storage.sync.get({addresses: []}, (data) => {
+//       sendResponse(data.addresses);
+//     });
+//     return true; // Keeps the message channel open for sendResponse
+//   }
+// });
+
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-  if (message.action === 'addAddress') {
-    const address = message.address;
-    const complaints = await fetchComplaintData(address);
+  const newAddress = message.address;
+  console.log(newAddress);
+})
 
-    chrome.storage.sync.get({addresses: []}, (data) => {
-      let addresses = data.addresses;
-      addresses.push({ address: address, complaints: complaints }); // append the new address to existing list
-      chrome.storage.sync.set({addresses: addresses}, () => {
-        sendResponse({ success: true });
-      });
-    });
-
-    return true; // Keeps the message channel open for sendResponse
-  } else if (message.action === 'getAddresses') {
-    chrome.storage.sync.get({addresses: []}, (data) => {
-      sendResponse(data.addresses);
-    });
-    return true; // Keeps the message channel open for sendResponse
-  }
-});
 
 
 async function fetchComplaintData(address) {
