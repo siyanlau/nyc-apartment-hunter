@@ -1,19 +1,20 @@
+const addressForm = document.getElementById('addressForm')
 
-
-document.getElementById('addressForm').addEventListener('submit', (e) => {
+addressForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const addressInput = document.getElementById('addressInput').value;
-  // chrome.runtime.sendMessage({ action: 'addAddress', address: addressInput }, (response) => {
-  //   if (response.success) {
-  //     document.getElementById('addressInput').value = ''; // clear the input field
-  //     loadAddresses();
-  //   }
-  //   else {
-  //     console.log("sent address input to background but did not receive response??");
-  //   }
-  // });
-  console.log("front end received address ", addressInput);
-  chrome.runtime.sendMessage({ action: 'addAddress', address: addressInput });
+  
+  chrome.runtime.sendMessage({ action: 'addAddress', address: addressInput }, (response) => {
+    if (response.success) {
+      document.getElementById('addressInput').value = ''; // clear the input field
+      // loadAddresses();
+    }
+    else {
+      console.log("sent address input to background but did not receive response??");
+    }
+  });
+  // console.log("front end received address ", addressInput);
+  // chrome.runtime.sendMessage({ action: 'addAddress', address: addressInput });
 });
 
 

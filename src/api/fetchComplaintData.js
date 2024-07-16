@@ -11,7 +11,7 @@ export default function fetchComplaintData(address) {
             return response.json();
         })
         .then(data => {
-            const simplifiedData = data.map(complaint => ({ descriptor: complaint.descriptor }));
+            const simplifiedData = data.map(complaint => ({ "descriptor": complaint.descriptor }));
             return simplifiedData;
         })
         .catch(error => {
