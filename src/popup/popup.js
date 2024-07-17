@@ -7,28 +7,16 @@ addressForm.addEventListener('submit', async (e) => {
   const addressInput = document.getElementById('addressInput').value;
 
   try {
-    console.log("Starting to send message...");
-    // const response = await sendMessagePromise({ action: 'addAddress', address: addressInput });
-
-    successBool = await chrome.runtime.sendMessage({ action: 'addAddress', address: addressInput }, (response, error) => {
-      if (response) {
-          console.log("about to resolve response");
-          resolve(response);
-      } else {
-          console.log("chrome runtime lastError", error);
-          reject(chrome.runtime.lastError);
-      }
-    })
-
-    if (response.successBool) {
+    console.log("Starting to send message (new address)...");
+    const successBool = await chrome.runtime.sendMessage({ action: 'addAddress', address: addressInput });
+    if (successBool) {
       document.getElementById('addressInput').value = ''; // clear the input field
-      console.log("message successfully sent, got response");
-      loadAddresses();
+      console.log("Message sent successfully and response received: ", successBool);
     } else {
-      console.log("Failed to add address");
+      console.log("No response received");
     }
   } catch (error) {
-    console.log("Error sending message:", error);
+    console.error("Error sending message:", error);
   }
 });
 
