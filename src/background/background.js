@@ -1,18 +1,20 @@
 import fetchComplaintData from "../api/fetchComplaintData.js"
 import './contextMenu.js';
+import {getSyncStorage, setSyncStorage} from "../utils.js"
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   if (message.action === 'addAddress') {
-    const successBool = handleAddAddress(message);
-    sendResponse({ success: successBool });
+    try {
+      const successBool = await handleAddAddress(message);
+      sendResponse({ success: successBool });
+      console.log("response sent from onMessage listener with success:", successBool);
+    } catch (error) {
+      console.error("Error handling addAddress:", error);
+      sendResponse({ success: false, error: error.message });
+    }
     return true; // Indicate you will send a response asynchronously
   }
-  // else if (message.action === 'getAddresses') {
-  //   chrome.storage.sync.get({ addresses: [] }, (data) => {
-  //     console.log("addresses stored in background: ", data.addresses);
-  //     sendResponse(data.addresses);
-  //   });
-  // };
+  // Handle other actions as needed
 });
 
 const handleAddAddress = async (message) => {
@@ -23,16 +25,19 @@ const handleAddAddress = async (message) => {
 
   if (!complaints) return false;
 
-  chrome.storage.sync.get({ addresses: [] }, (data) => {
+  try {
+    const data = await getSyncStorage({ addresses: [] });
     let addresses = data.addresses;
     const addressExists = addresses.some(item => item.address === newAddress);
 
     if (!addressExists) {
       addresses.push({ address: newAddress, complaints: complaints }); // Append the new address and its complaints to the existing list
-      chrome.storage.sync.set({ addresses: addresses });
+      await setSyncStorage({ addresses: addresses });
     }
     console.log(data.addresses);
-  });
-
-  return true;
+    return true;
+  } catch (error) {
+    console.error("Error accessing storage:", error);
+    return false;
+  }
 }
