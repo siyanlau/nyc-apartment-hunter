@@ -1,24 +1,33 @@
+import { sendMessagePromise } from '../utils.js';
+
 const addressForm = document.getElementById('addressForm')
 
-addressForm.addEventListener('submit', (e) => {
+addressForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const addressInput = document.getElementById('addressInput').value;
-  
-  chrome.runtime.sendMessage({ action: 'addAddress', address: addressInput }, (response) => {
+
+  try {
+    const response = await sendMessagePromise({ action: 'addAddress', address: addressInput });
     if (response.success) {
       document.getElementById('addressInput').value = ''; // clear the input field
-      // loadAddresses();
+    } else {
+      console.log("Failed to add address");
     }
-    else {
-      console.log("sent address input to background but did not receive response??");
-    }
-  });
-  // console.log("front end received address ", addressInput);
-  // chrome.runtime.sendMessage({ action: 'addAddress', address: addressInput });
+  } catch (error) {
+    console.log("Error sending message:", error);
+  }
+
+  loadAddresses();
 });
 
 
-// function loadAddresses() {
+function loadAddresses() {
+  chrome.storage.sync.get({ addresses: [] }, (data) => {
+    console.log("addresses stored in background: ", data.addresses);
+  })
+}
+
+
 //   chrome.runtime.sendMessage({ action: 'getAddresses' }, (addresses) => { // don't want to load addresses every time, needs refactor
 //     if (chrome.runtime.lastError) {
 //       console.error(chrome.runtime.lastError.message);
@@ -46,4 +55,3 @@ addressForm.addEventListener('submit', (e) => {
 // }
 
 // loadAddresses();
-  
