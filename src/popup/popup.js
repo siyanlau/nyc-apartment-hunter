@@ -1,4 +1,4 @@
-// import { sendMessagePromise } from '../utils.js';
+import { getSyncStorage, setSyncStorage } from "../utils.js"
 
 const addressForm = document.getElementById('addressForm')
 
@@ -24,46 +24,29 @@ addressForm.addEventListener('submit', (e) => {
 
 
 function loadAddresses() {
-  chrome.storage.sync.get({ addresses: [] }, (data) => {
-    console.log("9. addresses stored in background: ", data.addresses);
-    const addresses = data.addresses;
-    const addressList = document.getElementById('addressList');
-    addressList.innerHTML = '';
-    addresses.forEach((item) => {
-      const li = document.createElement('li');
-      li.textContent = item.address;
-      const complaintsDiv = document.createElement('div');
-      complaintsDiv.classList.add('complaints');
-      complaintsDiv.innerHTML = `<h3>Complaints for ${item.address}</h3>`;
-      item.complaints.forEach(complaint => {
-        const complaintItem = document.createElement('p');
-        complaintItem.textContent = complaint.descriptor;
-        complaintsDiv.appendChild(complaintItem);
+  getSyncStorage({ addresses: [] })
+    .then((data) => {
+      console.log("9. addresses stored in background: ", data.addresses);
+      const addresses = data.addresses;
+      const addressList = document.getElementById('addressList');
+      addressList.innerHTML = '';
+      addresses.forEach((item) => {
+        const li = document.createElement('li');
+        li.textContent = item.address;
+        const complaintsDiv = document.createElement('div');
+        complaintsDiv.classList.add('complaints');
+        complaintsDiv.innerHTML = `<h3>Complaints for ${item.address}</h3>`;
+        item.complaints.forEach(complaint => {
+          const complaintItem = document.createElement('p');
+          complaintItem.textContent = complaint.descriptor;
+          complaintsDiv.appendChild(complaintItem);
+        });
+        li.appendChild(complaintsDiv);
+        addressList.appendChild(li);
       });
-      li.appendChild(complaintsDiv);
-      addressList.appendChild(li);
+    })
+    .catch(error => {
+      console.error("Error handling addAddress:", error);
+      sendResponse({ success: false, error: error.message });
     });
-  });
 }
-
-
-//     const addressList = document.getElementById('addressList');
-//     addressList.innerHTML = '';
-//     addresses.forEach((item) => {
-//       const li = document.createElement('li');
-//       li.textContent = item.address;
-//       const complaintsDiv = document.createElement('div');
-//       complaintsDiv.classList.add('complaints');
-//       complaintsDiv.innerHTML = `<h3>Complaints for ${item.address}</h3>`;
-//       item.complaints.forEach(complaint => {
-//         const complaintItem = document.createElement('p');
-//         complaintItem.textContent = complaint.descriptor;
-//         complaintsDiv.appendChild(complaintItem);
-//       });
-//       li.appendChild(complaintsDiv);
-//       addressList.appendChild(li);
-//     });
-//   });
-// }
-
-// loadAddresses();

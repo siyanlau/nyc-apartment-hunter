@@ -20,40 +20,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
-// const handleAddAddress = async (message) => {
-//   const newAddress = message.address;
-//   console.log("3. background received new address:", newAddress);
-
-//   // Simulate a delay with a timeout
-//   await new Promise(resolve => setTimeout(resolve, 1000)); 
-
-//   // Dummy complaints data
-//   const complaints = {
-//     complaints: [
-//       { type: "Noise", description: "Loud music at night" },
-//       { type: "Pest", description: "Rodent infestation" }
-//     ]
-//   };
-//   console.log("4. Dummy complaints:", complaints);
-  
-//   try {
-//     // Dummy storage data
-//     let addresses = [{ address: '456 Another St', complaints: [] }];
-
-//     const addressExists = addresses.some(item => item.address === newAddress);
-
-//     if (!addressExists) {
-//       addresses.push({ address: newAddress, complaints: complaints });
-//     }
-//     console.log("5. ", addresses);
-//     return true;
-//   } catch (error) {
-//     console.error("Error:", error);
-//     return false;
-//   }
-// };
-
-
 const handleAddAddress = async (message) => {
   const newAddress = message.address;
   console.log("3. background received new address: ", newAddress);
