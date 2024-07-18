@@ -2,22 +2,23 @@
 
 const addressForm = document.getElementById('addressForm')
 
-addressForm.addEventListener('submit', async (e) => {
+addressForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const addressInput = document.getElementById('addressInput').value;
 
-  try {
-    console.log("Starting to send message (new address)...");
-    const successBool = await chrome.runtime.sendMessage({ action: 'addAddress', address: addressInput });
-    if (successBool) {
-      document.getElementById('addressInput').value = ''; // clear the input field
-      console.log("Message sent successfully and response received: ", successBool);
-    } else {
-      console.log("No response received");
-    }
-  } catch (error) {
-    console.error("Error sending message:", error);
-  }
+  console.log("1. Starting to send message (new address)...");
+  chrome.runtime.sendMessage({ action: 'addAddress', address: addressInput })
+    .then(response => {
+      if (response) {
+        document.getElementById('addressInput').value = ''; // clear the input field
+        console.log("8. Message sent successfully and response received: ", response);
+      } else {
+        console.log("No response received", response);
+      }
+    })
+    .catch(error => {
+      console.error("Error sending message:", error);
+    });
 });
 
 
