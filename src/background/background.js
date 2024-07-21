@@ -23,7 +23,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 const handleAddAddress = async (message) => {
   const newAddress = message.address;
   console.log("3. background received new address: ", newAddress);
-  const complaints = await fetchComplaintData(newAddress);
+  const complaints = await fetchComplaintData(newAddress); // rodentCount, noiseCount, etc
   console.log("5. complaints: ", complaints);
 
   if (!complaints) return false;
@@ -35,7 +35,7 @@ const handleAddAddress = async (message) => {
 
     if (!addressExists) {
       addresses.push({ address: newAddress, complaints: complaints }); // Append the new address and its complaints to the existing list
-      await setSyncStorage({ addresses: addresses });
+      await setSyncStorage({ addresses: addresses, complaints: complaints});
     }
     console.log("6", data.addresses);
     return true;

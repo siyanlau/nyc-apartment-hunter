@@ -30,23 +30,27 @@ function loadAddresses() {
       const addresses = data.addresses;
       const addressList = document.getElementById('addressList');
       addressList.innerHTML = '';
+      console.log("10 starting forEach loop ");
       addresses.forEach((item) => {
         const li = document.createElement('li');
         li.textContent = item.address;
         const complaintsDiv = document.createElement('div');
         complaintsDiv.classList.add('complaints');
         complaintsDiv.innerHTML = `<h3>Complaints for ${item.address}</h3>`;
-        item.complaints.forEach(complaint => {
-          const complaintItem = document.createElement('p');
-          complaintItem.textContent = complaint.descriptor;
-          complaintsDiv.appendChild(complaintItem);
-        });
+        // item.complaints.forEach(complaint => {
+        const counts = item.complaints;
+        const complaintItem = document.createElement('p');
+        complaintItem.textContent = `Noise Complaints: ${counts.noiseCount} 
+        \nRodent Complaints: ${counts.rodentCount} \nWater Complaints: ${counts.waterCount}
+        \nOther Complaints: ${counts.othersCount}`;
+        complaintsDiv.appendChild(complaintItem);
+        // });
+
         li.appendChild(complaintsDiv);
         addressList.appendChild(li);
       });
     })
     .catch(error => {
       console.error("Error handling addAddress:", error);
-      sendResponse({ success: false, error: error.message });
     });
 }
