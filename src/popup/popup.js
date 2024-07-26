@@ -1,10 +1,18 @@
-import { getSyncStorage, setSyncStorage } from "../utils.js"
+import { getSyncStorage, setSyncStorage, addressFormatter } from "../utils.js"
 import { geocode } from "../api/geocode.js"
 
 // ----------------------------------------------------------------------
 
 const addressForm = document.getElementById('addressForm')
-geocode("5568 Waterman blvd stl");
+geocode("451 51st st");
+
+const houseNum = '451';
+const street = 'West 51st Street';
+const district = 'Manhattan';
+
+const [address, districtName] = addressFormatter(houseNum, street, district);
+console.log(address);       // Outputs: "451 WEST 51 STREET"
+console.log(districtName);  // Outputs: "Manhattan"
 
 addressForm.addEventListener('submit', (e) => {
   e.preventDefault();

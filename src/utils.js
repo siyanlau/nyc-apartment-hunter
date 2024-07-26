@@ -21,3 +21,10 @@ export const setSyncStorage = (items) => {
     });
   });
 };
+
+export const addressFormatter = (houseNum, street, district) => {
+  const streetName = street.replace(/(\d+)(st|nd|rd|th)\b/i, '$1').trim().toUpperCase();
+  const addressPart = `${houseNum} ${streetName}`.trim();
+  const districtPart = district.toUpperCase();
+  return [addressPart, districtPart];
+}
