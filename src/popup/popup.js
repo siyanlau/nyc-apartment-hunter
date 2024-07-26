@@ -1,25 +1,31 @@
 import { getSyncStorage, setSyncStorage, addressFormatter, parseAddress } from "../utils/utils.js"
 import { nearbySubway } from "../utils/api/nearbySubway.js";
+import { walkingDurantion } from "../utils/api/commuteDuration.js";
 
 const addressForm = document.getElementById('addressForm')
 
 addressForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const addressInput = document.getElementById('addressInput').value;
-  let address = null, districtName = null, lat = null, lng = null;
+  let address = null, districtName = null, lat = null, lng = null, placeId = null;
 
   parseAddress(addressInput)
-    .then(([houseNum, street, district, latitude, longitude]) => {
+    .then(([houseNum, street, district, latitude, longitude, place_id]) => {
       // Address formatting
       [address, districtName] = addressFormatter(houseNum, street, district);
       lat = latitude;
       lng = longitude;
+      placeId = place_id;
       // Logging results
       console.log(address);
       console.log(districtName);
 
       console.log("testing nearby Subway...");
-      nearbySubway(lat, lng);
+      const dest_id = "ChIJq7z38-FEwokReJgESNhW2T8", start_id = "EioxNTU5IFcgNnRoIFN0ICMyZCwgQnJvb2tseW4sIE5ZIDExMjA0LCBVU0EiHhocChYKFAoSCav7OK7jRMKJEeFpQNyCViQrEgIyZA";
+      console.log("testing commute duration....");
+      const walk_to_subway_data = walkingDurantion(start_id, dest_id);
+      console.log("walking duration to subway: ", walk_to_subway_data);
+
 
       // Now that we have the address, we can start sending the message
       console.log("1. Starting to send message (new address)...");
