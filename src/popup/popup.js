@@ -8,17 +8,24 @@ const addressForm = document.getElementById('addressForm')
 // console.log(address);
 // console.log(districtName);
 
-addressForm.addEventListener('submit', async (e) => {
+addressForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const addressInput = document.getElementById('addressInput').value;
-  const [houseNum, street, district] = await parseAddress("451 51st st brooklyn");
+  let address = null, districtName = null;
 
-  const [address, districtName] = addressFormatter(houseNum, street, district);
-  console.log(address);
-  console.log(districtName);
+  parseAddress(addressInput)
+    .then(([houseNum, street, district]) => {
+      // Address formatting
+      [address, districtName] = addressFormatter(houseNum, street, district);
 
-  console.log("1. Starting to send message (new address)...");
-  chrome.runtime.sendMessage({ action: 'addAddress', address: addressInput })
+      // Logging results
+      console.log(address);
+      console.log(districtName);
+
+      // Now that we have the address, we can start sending the message
+      console.log("1. Starting to send message (new address)...");
+      return chrome.runtime.sendMessage({ action: 'addAddress', address: address })
+    })
     .then(response => {
       if (response) {
         document.getElementById('addressInput').value = ''; // clear the input field
@@ -28,8 +35,8 @@ addressForm.addEventListener('submit', async (e) => {
         console.log("No response received", response);
       }
     })
-    .catch(error => {
-      console.error("Error sending message:", error);
+    .catch((error) => {
+      console.error('Error processing address:', error);
     });
 });
 
