@@ -1,6 +1,6 @@
-import fetchComplaintData from "../api/fetchComplaintData.js"
+import fetchComplaintData from "../utils/api/fetchComplaintData.js"
 import './contextMenu.js';
-import {getSyncStorage, setSyncStorage} from "../utils.js"
+import {getSyncStorage, setSyncStorage, parseAddress} from "../utils/utils.js"
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'addAddress') {

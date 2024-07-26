@@ -1,35 +1,21 @@
-import { getSyncStorage, setSyncStorage, addressFormatter } from "../utils.js"
-import { geocode } from "../api/geocode.js"
-
-// ----------------------------------------------------------------------
+import { getSyncStorage, setSyncStorage, addressFormatter, parseAddress } from "../utils/utils.js"
 
 const addressForm = document.getElementById('addressForm')
-const data = await geocode("451 51st st brooklyn");
-console.log("printing returned data ", data)
-const addressVals = data.results[0].address_components;
-console.log("address vals: ", addressVals);
-let houseNum = null, street = null, district = null;
-if (addressVals.length === 9) {
-  houseNum = addressVals[0].long_name;
-  street = addressVals[1].long_name;
-  district = addressVals[3].long_name;
-}
-else if (addressVals.length === 10) {
-  houseNum = addressVals[1].long_name;
-  street = addressVals[2].long_name;
-  district = addressVals[4].long_name;
-}
-else {
-  console.log("address parsing went wrong");
-}
 
-const [address, districtName] = addressFormatter(houseNum, street, district);
-console.log(address);       // Outputs: "451 WEST 51 STREET"
-console.log(districtName);  // Outputs: "Manhattan"
+// const [houseNum, street, district] = await parseAddress("451 51st st brooklyn");
 
-addressForm.addEventListener('submit', (e) => {
+// const [address, districtName] = addressFormatter(houseNum, street, district);
+// console.log(address);
+// console.log(districtName);
+
+addressForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const addressInput = document.getElementById('addressInput').value;
+  const [houseNum, street, district] = await parseAddress("451 51st st brooklyn");
+
+  const [address, districtName] = addressFormatter(houseNum, street, district);
+  console.log(address);
+  console.log(districtName);
 
   console.log("1. Starting to send message (new address)...");
   chrome.runtime.sendMessage({ action: 'addAddress', address: addressInput })
