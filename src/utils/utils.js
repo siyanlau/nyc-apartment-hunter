@@ -54,7 +54,7 @@ export const parseAddress = async (inputAddress) => {
   const addressVals = data.results[0].address_components;
   console.log("address vals: ", addressVals);
   let houseNum = null, street = null, district = null;
-  if (addressVals.length === 9) {
+  if (addressVals.length <= 9) {
     houseNum = addressVals[0].long_name;
     street = addressVals[1].long_name;
     district = addressVals[3].long_name;

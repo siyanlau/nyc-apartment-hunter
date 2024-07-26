@@ -2,12 +2,6 @@ import { getSyncStorage, setSyncStorage, addressFormatter, parseAddress } from "
 
 const addressForm = document.getElementById('addressForm')
 
-// const [houseNum, street, district] = await parseAddress("451 51st st brooklyn");
-
-// const [address, districtName] = addressFormatter(houseNum, street, district);
-// console.log(address);
-// console.log(districtName);
-
 addressForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const addressInput = document.getElementById('addressInput').value;
@@ -40,6 +34,7 @@ addressForm.addEventListener('submit', (e) => {
     });
 });
 
+loadAddresses();
 
 function loadAddresses() {
   getSyncStorage({ addresses: [] })
