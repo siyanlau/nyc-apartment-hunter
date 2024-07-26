@@ -67,7 +67,9 @@ export const parseAddress = async (inputAddress) => {
   else {
     console.log("address parsing went wrong");
   }
-  return [houseNum, street, district];
+  const {lat, lng} = data.results[0].geometry.location;
+  console.log("latitude and longitude: ", lat, lng);
+  return [houseNum, street, district, lat, lng];
 }
 
 export const addressFormatter = (houseNum, street, district) => {

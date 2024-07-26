@@ -1,20 +1,25 @@
 import { getSyncStorage, setSyncStorage, addressFormatter, parseAddress } from "../utils/utils.js"
+import { nearbySubway } from "../utils/api/nearbySubway.js";
 
 const addressForm = document.getElementById('addressForm')
 
 addressForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const addressInput = document.getElementById('addressInput').value;
-  let address = null, districtName = null;
+  let address = null, districtName = null, lat = null, lng = null;
 
   parseAddress(addressInput)
-    .then(([houseNum, street, district]) => {
+    .then(([houseNum, street, district, latitude, longitude]) => {
       // Address formatting
       [address, districtName] = addressFormatter(houseNum, street, district);
-
+      lat = latitude;
+      lng = longitude;
       // Logging results
       console.log(address);
       console.log(districtName);
+
+      console.log("testing nearby Subway...");
+      nearbySubway(lat, lng);
 
       // Now that we have the address, we can start sending the message
       console.log("1. Starting to send message (new address)...");
@@ -46,7 +51,7 @@ function loadAddresses() {
       console.log("10 starting forEach loop ");
       addresses.forEach((item) => {
         const li = document.createElement('li');
-        li.textContent = item.address;
+        // li.textContent = item.address;
         const complaintsDiv = document.createElement('div');
         complaintsDiv.classList.add('complaints');
         complaintsDiv.innerHTML = `<h3>Complaints for ${item.address}</h3>`;
