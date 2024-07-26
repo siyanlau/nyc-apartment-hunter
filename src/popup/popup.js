@@ -1,27 +1,10 @@
 import { getSyncStorage, setSyncStorage } from "../utils.js"
-import CONFIG from "../config.js"
-
-const apiKey = CONFIG.API_KEY;
-const address = '451 51st st brooklyn';
-
-const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
-
-fetch(url)
-  .then(response => response.json())
-  .then(data => {
-    console.log(data);
-    if (data.status === 'OK') {
-      const location = data.results[0].geometry.location;
-      console.log(`Latitude: ${location.lat}, Longitude: ${location.lng}`);
-    } else {
-      console.error('Geocoding error:', data.status);
-    }
-  })
-  .catch(error => console.error('Error:', error));
+import { geocode } from "../api/geocode.js"
 
 // ----------------------------------------------------------------------
 
 const addressForm = document.getElementById('addressForm')
+geocode("5568 Waterman blvd stl");
 
 addressForm.addEventListener('submit', (e) => {
   e.preventDefault();
