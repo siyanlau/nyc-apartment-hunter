@@ -2,7 +2,7 @@ import { getSyncStorage, setSyncStorage } from "../utils.js"
 import CONFIG from "../config.js"
 
 const apiKey = CONFIG.API_KEY;
-const address = '1600 Amphitheatre Parkway, Mountain View, CA';
+const address = '451 51st st brooklyn';
 
 const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
 
