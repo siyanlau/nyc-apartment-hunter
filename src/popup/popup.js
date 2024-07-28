@@ -1,31 +1,21 @@
 import { getSyncStorage, setSyncStorage, addressFormatter, parseAddress } from "../utils/utils.js"
 import { nearbySubway } from "../utils/api/nearbySubway.js";
-import { walkingDurantion } from "../utils/api/commuteDuration.js";
+import { commuteDurantion } from "../utils/api/commuteDuration.js";
 
 const addressForm = document.getElementById('addressForm')
+const destinationForm = document.getElementById('destinationForm');
+const destinationId = "ChIJ85aDTUpawokR95FkWT0xm9o"; // this is Tandon, or 6 MetroTech.
 
 addressForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const addressInput = document.getElementById('addressInput').value;
-  let address = null, districtName = null, lat = null, lng = null, placeId = null;
+  let address = null, districtName = null, placeId;
 
   parseAddress(addressInput)
     .then(([houseNum, street, district, latitude, longitude, place_id]) => {
       // Address formatting
       [address, districtName] = addressFormatter(houseNum, street, district);
-      lat = latitude;
-      lng = longitude;
       placeId = place_id;
-      // Logging results
-      console.log(address);
-      console.log(districtName);
-
-      console.log("testing nearby Subway...");
-      const dest_id = "ChIJq7z38-FEwokReJgESNhW2T8", start_id = "EioxNTU5IFcgNnRoIFN0ICMyZCwgQnJvb2tseW4sIE5ZIDExMjA0LCBVU0EiHhocChYKFAoSCav7OK7jRMKJEeFpQNyCViQrEgIyZA";
-      console.log("testing commute duration....");
-      const walk_to_subway_data = walkingDurantion(start_id, dest_id);
-      console.log("walking duration to subway: ", walk_to_subway_data);
-
 
       // Now that we have the address, we can start sending the message
       console.log("1. Starting to send message (new address)...");
@@ -35,26 +25,39 @@ addressForm.addEventListener('submit', (e) => {
       if (response) {
         document.getElementById('addressInput').value = ''; // clear the input field
         console.log("8. Message sent successfully and response received: ", response);
-        loadAddresses();
+        console.log("9. Now starting to calculate commute distance...");
       } else {
         console.log("No response received", response);
       }
+      const commute_data = commuteDurantion(placeId, destinationId, "transit");
+      return commute_data;
+    })
+    .then(commute_data => {
+      console.log(commute_data);
+      loadAddresses();
     })
     .catch((error) => {
       console.error('Error processing address:', error);
     });
 });
 
+destinationForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const destinationInput = document.getElementById('destinationInput').value;
+  console.log("destination submit clicked")
+  chrome.runtime.sendMessage({ action: 'addDestination', destination: destinationInput });
+})
+
 loadAddresses();
 
 function loadAddresses() {
   getSyncStorage({ addresses: [] })
     .then((data) => {
-      console.log("9. addresses stored in background: ", data.addresses);
+      console.log("10. addresses stored in background: ", data.addresses);
       const addresses = data.addresses;
       const addressList = document.getElementById('addressList');
       addressList.innerHTML = '';
-      console.log("10 starting forEach loop ");
+      console.log("11 starting forEach loop ");
       addresses.forEach((item) => {
         const li = document.createElement('li');
         // li.textContent = item.address;

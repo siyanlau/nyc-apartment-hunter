@@ -15,7 +15,7 @@
     "type": "module"
   },
   "action": {
-    "default_popup": "popup/test.html"
+    "default_popup": "popup/popup.html"
   },
   "content_scripts": [
     {
