@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GEOID Finder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 10px;
+        }
+        input {
+            display: block;
+            margin-bottom: 10px;
+            width: 100%;
+            padding: 8px;
+        }
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>GEOID Finder</h1>
+    <input type="text" id="street" placeholder="Street">
+    <input type="text" id="city" placeholder="City">
+    <input type="text" id="state" placeholder="State">
+    <input type="text" id="zip" placeholder="ZIP Code">
+    <button id="fetchGeoID">Get GEOID</button>
+    <pre id="result"></pre>
+    <script src="geoIdTest.js"></script>
+</body>
+</html>

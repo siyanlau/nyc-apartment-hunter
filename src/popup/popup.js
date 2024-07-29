@@ -45,7 +45,8 @@ destinationForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const destinationInput = document.getElementById('destinationInput').value;
   console.log("destination submit clicked")
-  chrome.runtime.sendMessage({ action: 'addDestination', destination: destinationInput });
+  chrome.runtime.sendMessage({ action: 'addDestination', destination: destinationInput })
+    .then()
 })
 
 loadAddresses();

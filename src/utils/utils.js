@@ -52,25 +52,28 @@ export const parseAddress = async (inputAddress) => {
   const data = await geocode(inputAddress);
   console.log("printing returned data ", data)
   const addressVals = data.results[0].address_components;
+  const formattedAddress = data.results[0].formatted_address;
   console.log("address vals: ", addressVals);
-  let houseNum = null, street = null, district = null;
+  console.log("formatted address: ", formattedAddress);
+  let houseNum = null, street = null;
+
+  // this parsing scheme could go wrong. but we have to do it this way because 'formatted address' uses short names
   if (addressVals.length <= 9) {
     houseNum = addressVals[0].long_name;
     street = addressVals[1].long_name;
-    district = addressVals[3].long_name;
   }
   else if (addressVals.length === 10) {
     houseNum = addressVals[1].long_name;
     street = addressVals[2].long_name;
-    district = addressVals[4].long_name;
   }
   else {
     console.log("address parsing went wrong");
   }
-  const {lat, lng} = data.results[0].geometry.location;
+  // const {lat, lng} = data.results[0].geometry.location;
+
   const placeId = data.results[0].place_id;
-  console.log("latitude and longitude: ", lat, lng);
-  return [houseNum, street, district, lat, lng, placeId];
+
+  return [houseNum, street, district, placeId];
 }
 
 export const addressFormatter = (houseNum, street, district) => {
