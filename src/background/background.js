@@ -45,8 +45,10 @@ const handleAddDestination = async (message) => {
 
 const handleAddAddress = async (message) => {
   const newAddress = message.address;
+  const zipcode = message.zipcode;
+  const formattedAddress = message.formattedAddress;
   console.log("3. background received new address: ", newAddress);
-  const complaints = await fetchComplaintData(newAddress); // rodentCount, noiseCount, etc
+  const complaints = await fetchComplaintData(newAddress, zipcode); // rodentCount, noiseCount, etc
   console.log("5. complaints: ", complaints);
 
   if (!complaints) return false;

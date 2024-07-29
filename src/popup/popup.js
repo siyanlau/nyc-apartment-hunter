@@ -9,17 +9,17 @@ const destinationId = "ChIJ85aDTUpawokR95FkWT0xm9o"; // this is Tandon, or 6 Met
 addressForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const addressInput = document.getElementById('addressInput').value;
-  let address = null, districtName = null, placeId;
+  let address = null, placeId;
 
   parseAddress(addressInput)
-    .then(([houseNum, street, district, latitude, longitude, place_id]) => {
+    .then(([houseNum, street, place_id, zipcode, formattedAddress]) => {
       // Address formatting
-      [address, districtName] = addressFormatter(houseNum, street, district);
+      address = addressFormatter(houseNum, street);
       placeId = place_id;
 
       // Now that we have the address, we can start sending the message
       console.log("1. Starting to send message (new address)...");
-      return chrome.runtime.sendMessage({ action: 'addAddress', address: address })
+      return chrome.runtime.sendMessage({ action: 'addAddress', address: address, zipcode: zipcode, formattedAddress: formattedAddress })
     })
     .then(response => {
       if (response) {

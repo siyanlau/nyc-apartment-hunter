@@ -53,6 +53,7 @@ export const parseAddress = async (inputAddress) => {
   console.log("printing returned data ", data)
   const addressVals = data.results[0].address_components;
   const formattedAddress = data.results[0].formatted_address;
+  const placeId = data.results[0].place_id;
   console.log("address vals: ", addressVals);
   console.log("formatted address: ", formattedAddress);
   let houseNum = null, street = null;
@@ -69,16 +70,25 @@ export const parseAddress = async (inputAddress) => {
   else {
     console.log("address parsing went wrong");
   }
-  // const {lat, lng} = data.results[0].geometry.location;
 
-  const placeId = data.results[0].place_id;
+  const zipcode = extractZipCode(formattedAddress);
+  console.log(zipcode);
 
-  return [houseNum, street, district, placeId];
+  return [houseNum, street, placeId, zipcode, formattedAddress];
 }
 
-export const addressFormatter = (houseNum, street, district) => {
+export const addressFormatter = (houseNum, street) => {
   const streetName = street.replace(/(\d+)(st|nd|rd|th)\b/i, '$1').trim().toUpperCase();
-  const addressPart = `${houseNum} ${streetName}`.trim();
-  const districtPart = district.toUpperCase();
-  return [addressPart, districtPart];
+  const address = `${houseNum} ${streetName}`.trim();
+  return address;
+}
+
+export const extractZipCode = (address) => {
+  const parts = address.split(',');
+  if (parts.length >= 3) {
+      const zip = parts[2].trim().match(/\d{5}/);
+      return zip ? zip[0] : null;
+  } else {
+      return null;
+  }
 }

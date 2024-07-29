@@ -3,9 +3,9 @@
 // const endpoint = 'https://data.cityofnewyork.us/resource/jrb2-thup.json?incident_address=';
 const endpoint = 'https://data.cityofnewyork.us/resource/erm2-nwe9.json?incident_address=';
 
-export default async function fetchComplaintData(address) {
+export default async function fetchComplaintData(address, zipcode) {
     try {
-        const response = await fetch(endpoint + encodeURIComponent(address));
+        const response = await fetch(endpoint + encodeURIComponent(address) + "&incident_zip=" + zipcode);
 
         if (!response.ok) {
             console.log("NYC open data response was not ok");
