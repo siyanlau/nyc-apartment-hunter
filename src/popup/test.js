@@ -9,15 +9,40 @@ import { geocode } from "../utils/api/geocode.js";
 // const transit_duration_data = await commuteDurantion(start_id, home_id, "transit");
 // console.log("transit duration ", transit_duration_data);
 
-function extractZipCode(address) {
-    const parts = address.split(',');
-    if (parts.length >= 3) {
-        const zip = parts[2].trim().match(/\d{5}/);
-        return zip ? zip[0] : null;
-    } else {
-        return null;
+// function extractZipCode(address) {
+//     const parts = address.split(',');
+//     if (parts.length >= 3) {
+//         const zip = parts[2].trim().match(/\d{5}/);
+//         return zip ? zip[0] : null;
+//     } else {
+//         return null;
+//     }
+// }
+
+const addressComponentExtractor = (formattedAddress) => {
+    const parts = formattedAddress.split(',');
+
+    if (parts.length < 3) {
+        throw new Error("Invalid address format");
     }
+
+    // Extract the street, city, and stateZip from the parts
+    const street = parts[0].trim();
+    const city = parts[1].trim();
+    const stateZip = parts[2].trim();
+
+    // Split the stateZip part to get the state and zip
+    const stateZipParts = stateZip.split(' ');
+    const zip = stateZipParts.pop();  // Get the last part which is the ZIP code
+    const state = stateZipParts.join(' ');  // The remaining parts form the state
+
+    return {
+        street: street,
+        city: city,
+        state: state,
+        zip: zip
+    };
 }
 
-const res = extractZipCode("1559 W 6th St #2d, Brooklyn, NY 11204, USA");
+const res = addressComponentExtractor("1559 W 6th St #2d, Brooklyn, NY 11204, USA");
 console.log(res);
