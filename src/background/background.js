@@ -3,6 +3,7 @@ import './contextMenu.js';
 import { getSyncStorage, setSyncStorage, parseAddress } from "../utils/utils.js"
 import { geocode } from "../utils/api/geocode.js";
 import { getGEOID } from "../utils/api/getGEOID.js";
+import { getDecennial } from "../utils/api/getDecennial.js";
 
 
 // the message that's sent to the backend has already been geocoded (in good format)
@@ -84,6 +85,7 @@ const fetchAndSetDemographics = async (message) => {
   const formattedAddress = message.formattedAddress;
   const {blockGEOID, blockGroupGEOID} = await getGEOID(formattedAddress);
   // console.log("blockGEOID", blockGEOID);
-
+  const ethnicityComp = await getDecennial(blockGroupGEOID);
+  console.log("!!ethnicity data: ", ethnicityComp);
   return true;
 }
