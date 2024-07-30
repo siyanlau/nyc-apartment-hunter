@@ -28,20 +28,20 @@ nyc-apartment-hunter/
 |   |   |-- contextMenu.js  
 |   |-- popup/  
 |   |   |-- popup.html  
-|   |   |-- popup.js 
-|   |   |-- popup.css 
-|   |-- utils/  
-|   |   |-- utils.js
-|   |   |-- api/
-|   |       |-- fetchComplaintData.js
-|   |       |-- geocode.js
-|   |       |-- getCommuteDuration.js
-|   |       |-- getDecennial.js
-|   |       |-- getGEOID.js
-|   |       |-- nearbySubway.js
-|   |-- content.js  
-|   |-- config.js
-|   |-- manifest.json  
+|   |   |-- popup.js  
+|   |   |-- popup.css  
+|   |-- utils/   
+|   |   |-- utils.js  
+|   |   |-- api/  
+|   |       |-- fetchComplaintData.js  
+|   |       |-- geocode.js  
+|   |       |-- getCommuteDuration.js  
+|   |       |-- getDecennial.js  
+|   |       |-- getGEOID.js  
+|   |       |-- nearbySubway.js  
+|   |-- content.js   
+|   |-- config.js  
+|   |-- manifest.json   
 |-- package.json  
 |-- README.md  
 
