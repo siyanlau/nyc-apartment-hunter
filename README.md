@@ -18,23 +18,32 @@ Currently, this extension has yet to be published to the Chrome Store. You can s
 2. Set a destination: Enter the address of your destination in the input field under "Enter commute destination" and click "Add Destination." You can input an losely structured address if the information is sufficiently identifying, for instance, `NYU Bobst Library`. For addresses that may contain ambiguity, for instance, `123 45th Street` (there may be a Brooklyn version and a Manhattan version), include the district name or the zipcode. 
 3. Add addresses: Enter an address in the input field under "Enter address" and click "Add Address."
 The extension will fetch and display complaints, ethnicity composition, and commute time for the added address.
-4. Caution! If you enter a new destination, all the currently stored addresses will be gone, since commute time needs to be re-calculated. Otherwise, all data is stored safely in Chrome, across different devices as long as you are logged into the same Google account. 
+4. Caution! If you enter a new destination, all the currently stored addresses will be gone, since commute time needs to be re-calculated. 
 
 ### File Structure
 nyc-apartment-hunter/  
-├── src/  
-│   ├── background/  
-│   │   ├── background.js   
-│   │   └── contextMenu.js  
-│   ├── popup/  
-│   │   ├── popup.html  
-│   │   └── popup.js  
-│   ├── api/  
-│   │   ├── fetchComplaintData.js  
-│   ├── content.js  
-│   └── manifest.json  
-├── package.json  
-├── README.md  
+|-- src/  
+│   |-- background/  
+│   │   |-- background.js   
+│   │   |-- contextMenu.js  
+│   |-- popup/  
+│   │   |-- popup.html  
+│   │   |-- popup.js 
+|   |   |-- popup.css 
+│   |-- utils/  
+|   |   |-- utils.js
+|   |   |-- api/
+|   |   |   |-- fetchComplaintData.js
+│   │   |   |-- geocode.js
+│   │   |   |-- getCommuteDuration.js
+│   │   |   |-- getDecennial.js
+│   │   |   |-- getGEOID.js
+│   │   |   |-- nearbySubway.js
+│   |-- content.js  
+|   |-- config.js
+│   |-- manifest.json  
+|-- package.json  
+|-- README.md  
 
 ### Default Settings
 1. Commute departure time is set to 10:00 am next day. 
