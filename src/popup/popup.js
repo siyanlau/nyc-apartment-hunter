@@ -3,7 +3,7 @@ import { nearbySubway } from "../utils/api/nearbySubway.js";
 
 const addressForm = document.getElementById('addressForm')
 const destinationForm = document.getElementById('destinationForm');
-const destinationId = "ChIJ85aDTUpawokR95FkWT0xm9o"; // this is Tandon, or 6 MetroTech.
+const destinationId = "ChIJ85aDTUpawokR95FkWT0xm9o"; // this is Tandon, or 6 MetroTech. Our default value.
 
 addressForm.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -40,9 +40,20 @@ destinationForm.addEventListener('submit', (e) => {
   const destinationInput = document.getElementById('destinationInput').value;
   console.log("destination submit clicked")
   chrome.runtime.sendMessage({ action: 'addDestination', destination: destinationInput })
-    .then()
+    .then(response => {
+      if (response) {
+        loadDestination();
+      }
+      else {
+        console.log("destination adding was not successful");
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    })
 })
 
+loadDestination();
 loadAddresses();
 
 function loadAddresses() {
@@ -53,10 +64,10 @@ function loadAddresses() {
       const addressList = document.getElementById('addressList');
       addressList.innerHTML = '';
       console.log("11 starting forEach loop ");
-      
+
       addresses.forEach((item) => {
         const li = document.createElement('li');
-        
+
         const addressDiv = document.createElement('div');
         addressDiv.classList.add('address');
         addressDiv.innerHTML = `<h3>Data for ${item.address}</h3>`;
@@ -64,7 +75,7 @@ function loadAddresses() {
         const commute = document.createElement('p');
         commute.textContent = `Commute time to destination is ${item.commuteDuration.text}`;
         addressDiv.appendChild(commute);
-        
+
         const counts = item.complaints;
         const complaintItem = document.createElement('p');
         complaintItem.textContent = `Noise Complaints: ${counts.noiseCount} 
@@ -78,7 +89,7 @@ function loadAddresses() {
         Black: ${item.ethnicity.blackPercentage}<br>
         Asian: ${item.ethnicity.asianPercentage}<br>
         Hispanic: ${item.ethnicity.hispanicPercentage}`;
-        
+
         li.appendChild(addressDiv);
         li.appendChild(ethnicity);
         addressList.appendChild(li);
@@ -87,4 +98,26 @@ function loadAddresses() {
     .catch(error => {
       console.error("Error handling loadAddresses:", error);
     });
+}
+
+function loadDestination() {
+  getSyncStorage({ destination: {destinationAddress: "6 MetroTech Center, Brooklyn, NY 11201, USA", destinationId: "ChIJ85aDTUpawokR95FkWT0xm9o"} }) // default value
+  .then((data) => {
+    const destinationAddress = data.destination.destinationAddress;
+    console.log("10. destination stored in background: ", destinationAddress);
+    
+    // Select the element where the destination will be displayed
+    const destinationDisplay = document.getElementById('destinationDisplay');
+    
+    // Clear any existing content
+    destinationDisplay.innerHTML = '';
+
+    // Create and append new content
+    const destinationDiv = document.createElement('div');
+    destinationDiv.innerHTML = `<h4>Your destination is set to: ${destinationAddress}</h4>`;
+    destinationDisplay.appendChild(destinationDiv);
+  })
+  .catch(error => {
+    console.error("Error loading destination:", error);
+  });
 }

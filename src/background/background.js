@@ -30,10 +30,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     handleAddDestination(message)
       .then(successBool => {
         sendResponse({ success: successBool });
-        console.log("7. HandleAddress done. response sent from onMessage listener with success:", successBool);
       })
       .catch(error => {
-        console.error("Error handling addAddress:", error);
+        console.error("Error handling addDestination:", error);
         sendResponse({ success: false, error: error.message });
       });
     return true;
@@ -43,9 +42,23 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 const handleAddDestination = async (message) => {
   const newDestination = message.destination;
   console.log("new destination passed in: ", newDestination);
-  const res = await geocode(newDestination);
-  console.log(res);
-  return true;
+
+  try {
+    const res = await geocode(newDestination);
+    console.log(res);
+    const formattedAddress = res.results[0].formatted_address;
+    const destinationId = res.results[0].place_id;
+
+    // Store the new destination in sync storage, overwriting the old one
+    await setSyncStorage({ destination: { destinationAddress: formattedAddress, destinationId: destinationId } });
+
+    console.log("Destination added successfully:", { destinationAddress: formattedAddress, destinationId: destinationId });
+
+    return true;
+  } catch (error) {
+    console.error("Error adding destination:", error);
+    return false;
+  }
 }
 
 const handleAddAddress = async (message) => {
