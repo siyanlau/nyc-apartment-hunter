@@ -17,7 +17,7 @@ export const getGEOID = async (formattedAddress) => {
     });
 
     const url = `${baseUrl}?${params.toString()}`;
-    console.log("url:", url);
+    // console.log("url:", url);
 
     try {
         const response = await fetch(url);

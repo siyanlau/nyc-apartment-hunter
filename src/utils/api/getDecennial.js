@@ -1,6 +1,8 @@
 // Note this function get *block group* level racial data. Needs modification if intended for block level data
+import CONFIG from "../../config.js";
+const apiKey = CONFIG.CENSUS_KEY;
 
-export async function getDecennial(blockGroupGEOID, apiKey) {
+export async function getDecennial(blockGroupGEOID) {
     const baseUrl = "https://api.census.gov/data/2020/dec/pl";
 
     // Extract state, county, and tract from the blockGroupGEOID
