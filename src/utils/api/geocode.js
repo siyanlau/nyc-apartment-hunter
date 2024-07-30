@@ -1,6 +1,6 @@
 import CONFIG from "../../config.js"
 
-const apiKey = CONFIG.API_KEY;
+const apiKey = CONFIG.GOOGLE_KEY;
 
 export const geocode = async (address) => {
     const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;

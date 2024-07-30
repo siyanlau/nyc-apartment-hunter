@@ -1,7 +1,7 @@
 // import { geocode} from "./geocode"
 import CONFIG from "../config.js"
 
-const apiKey = CONFIG.API_KEY;
+const apiKey = CONFIG.GOOGLE_KEY;
 
 export const getSyncStorage = (keys) => {
   return new Promise((resolve, reject) => {

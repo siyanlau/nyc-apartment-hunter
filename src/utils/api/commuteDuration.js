@@ -1,6 +1,6 @@
 import CONFIG from "../../config.js"
 
-const apiKey = CONFIG.API_KEY;
+const apiKey = CONFIG.GOOGLE_KEY;
 
 export const commuteDurantion = (start_id, dest_id, method) => {
     const departureTimestamp = getFutureTimestamp(10, 0);

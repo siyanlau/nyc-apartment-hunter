@@ -1,6 +1,6 @@
 import CONFIG from "../../config.js"
 
-const apiKey = CONFIG.API_KEY;
+const apiKey = CONFIG.GOOGLE_KEY;
 
 export const nearbySubway = (lat, lng) => {
     const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=${apiKey}&location=${lat},${lng}&rankby=distance&type=subway_station`;
