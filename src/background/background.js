@@ -66,17 +66,27 @@ const handleAddAddress = async (message) => {
   const complaints = await fetchComplaints(message);
   const ethnicity= await fetchDemographics(message);
   const commuteDuration = await fetchCommuteDuration(message);
-  if (!complaints || !ethnicity || !commuteDuration) return false;
+  if (!complaints || !ethnicity || !commuteDuration) {
+    console.log("either getting complaints, ethnicity, or commute duration failed. handleAddAddress about to return false.")
+    console.log("all three fields: ", complaints, ethnicity, commuteDuration);
+    return false;
+  }
 
   try {
     const data = await getSyncStorage({ addresses: [] });
     let addresses = data.addresses;
-    const addressExists = addresses.some(item => item.address === newAddress);
+    const addressIndex = addresses.findIndex(item => item.address === newAddress);
+    console.log("address index?? ", addressIndex);
 
-    if (!addressExists) {
+    if (addressIndex === -1) {
       addresses.push({ address: newAddress, complaints: complaints, ethnicity: ethnicity, commuteDuration: commuteDuration }); // Append the new address and its complaints to the existing list
-      await setSyncStorage({ addresses: addresses });
     }
+    else {
+      // replace the old record with the new one
+      addresses[addressIndex] = { address: newAddress, complaints: complaints, ethnicity: ethnicity, commuteDuration: commuteDuration };
+    }
+    await setSyncStorage({ addresses: addresses });
+
     console.log("6", data.addresses);
     return true;
   } catch (error) {
@@ -115,47 +125,28 @@ const fetchComplaints = async (message) => {
 
 const fetchDemographics = async (message) => {
   // message contains address data. first find the block group id. then feed the id into `getDecennial`
-  const address = message.address;
   const formattedAddress = message.formattedAddress;
   const { blockGEOID, blockGroupGEOID } = await getGEOID(formattedAddress);
-  // console.log("blockGEOID", blockGEOID);
   const ethnicityComp = await getDecennial(blockGroupGEOID);
   return ethnicityComp;
-
-  // try {
-  //   // Retrieve existing addresses from sync storage
-  //   const data = await getSyncStorage({ addresses: [] });
-  //   let addresses = data.addresses;
-
-  //   // Check if the address already exists in the storage
-  //   const addressIndex = addresses.findIndex(item => item.address === address);
-
-  //   // fetchAndSetComplaints gets executed first, so the address should already exist. 
-  //   if (addressIndex === -1) {
-  //     // If the address does not exist, add it
-  //     addresses.push({
-  //       address: address,
-  //       ethnicity: ethnicityComp
-  //     });
-  //   } else {
-  //     // If the address exists, update its ethnicity composition data
-  //     addresses[addressIndex].ethnicity = ethnicityComp;
-  //   }
-
-  //   // Save the updated addresses back to sync storage
-  //   await setSyncStorage({ addresses: addresses });
-  //   console.log("Updated addresses in storage:", addresses);
-
-  //   return true;
-  // } catch (error) {
-  //   console.error("Error accessing storage:", error);
-  //   return false;
-  // }
 }
 
 const fetchCommuteDuration = async (message) => {
   const placeId = message.placeId;
-  const destinationId = "ChIJ85aDTUpawokR95FkWT0xm9o"; // this is Tandon, or 6 MetroTech. Default value.
-  const commuteDuration = await getCommuteDuration(placeId, destinationId, "transit");
+  
+  const commuteDuration = await getSyncStorage({ destination: {destinationAddress: "6 Metrotech Center", destinationId: "ChIJ85aDTUpawokR95FkWT0xm9o"} }) // default value
+    .then((data) => {
+      const destinationId = data.destination.destinationId;
+      console.log("destination id set to: ", destinationId);
+      return destinationId;
+    })
+    .then(destinationId => {
+      const commuteDuration = getCommuteDuration(placeId, destinationId, "transit");
+      return commuteDuration;
+    })
+    .catch(error => {
+      console.log("fetching commute duration failed: ", error);
+    })
+
   return commuteDuration;
 }
