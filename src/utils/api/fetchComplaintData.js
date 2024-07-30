@@ -24,7 +24,7 @@ export default async function fetchComplaintData(address, zipcode) {
 }
 
 const countComplaintType = (data) => {
-    let noiseCount = 0, rodentCount = 0, waterCount = 0, parkingCount = 0, othersCount = 0;
+    let noiseCount = 0, rodentCount = 0, waterCount = 0, parkingCount = 0, hygieneCount = 0, othersCount = 0;
     data.forEach(entry => {
       const complaintType = entry.complaint_type.toLowerCase();
     //   console.log("complaint type: ", complaintType);
@@ -36,7 +36,9 @@ const countComplaintType = (data) => {
       } else if (complaintType.includes('water')) {
         waterCount++;
       } else if (complaintType.includes('parking')) {
-        parkingCount++;
+        parkingCount++; 
+      } else if (['dirty', 'sewer', 'unsanitary'].some(substring => complaintType.includes(substring))) {
+        hygieneCount++;
       } else {
         othersCount++;
       }
@@ -46,6 +48,7 @@ const countComplaintType = (data) => {
       noiseCount: noiseCount,
       rodentCount: rodentCount,
       waterCount: waterCount,
+      hygieneCount: hygieneCount,
       parkingCount: parkingCount,
       othersCount: othersCount
   };

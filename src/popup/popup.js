@@ -69,6 +69,7 @@ function loadAddresses() {
 
       addresses.forEach((item) => {
         const li = document.createElement('li');
+        li.classList.add('no-bullet'); // remove bullet points and indentation
 
         const addressDiv = document.createElement('div');
         addressDiv.classList.add('address');
@@ -83,6 +84,7 @@ function loadAddresses() {
         complaintItem.innerHTML = `Noise Complaints: ${counts.noiseCount} <br>
         Rodent Complaints: ${counts.rodentCount} <br>
         Water Complaints: ${counts.waterCount} <br>
+        Hygiene Complaints: ${counts.hygieneCount} <br>
         Parking Complaints: ${counts.parkingCount} <br>
         Other Complaints: ${counts.othersCount}`; 
         addressDiv.appendChild(complaintItem);
