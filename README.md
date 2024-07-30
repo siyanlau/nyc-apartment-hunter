@@ -46,6 +46,3 @@ nyc-apartment-hunter/
 |-- package.json  
 |-- README.md  
 ```
-
-### Default Settings
-1. Commute departure time is set to 10:00 am next day. 
