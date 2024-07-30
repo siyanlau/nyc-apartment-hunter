@@ -1,5 +1,3 @@
-// import {countComplaintType} from "./countComplaintType";
-
 // const endpoint = 'https://data.cityofnewyork.us/resource/jrb2-thup.json?incident_address=';
 const endpoint = 'https://data.cityofnewyork.us/resource/erm2-nwe9.json?incident_address=';
 
@@ -17,6 +15,7 @@ export default async function fetchComplaintData(address, zipcode) {
         const data = await response.json();
         const complaintsCount = countComplaintType(data);
         // const simplifiedData = data.map(complaint => ({ descriptor: complaint.descriptor, date: complaint.created_date }));
+        console.log("complaints data returned by fetchComplaintData: ", complaintsCount);
         return complaintsCount;
     } catch (error) {
         console.error('There was a problem with fetching from NYC open data: ', error);
@@ -25,7 +24,7 @@ export default async function fetchComplaintData(address, zipcode) {
 }
 
 const countComplaintType = (data) => {
-    let noiseCount = 0, rodentCount = 0, waterCount = 0, othersCount = 0;
+    let noiseCount = 0, rodentCount = 0, waterCount = 0, parkingCount = 0, othersCount = 0;
     data.forEach(entry => {
       const complaintType = entry.complaint_type.toLowerCase();
     //   console.log("complaint type: ", complaintType);
@@ -36,6 +35,8 @@ const countComplaintType = (data) => {
         rodentCount++;
       } else if (complaintType.includes('water')) {
         waterCount++;
+      } else if (complaintType.includes('parking')) {
+        parkingCount++;
       } else {
         othersCount++;
       }
@@ -45,6 +46,7 @@ const countComplaintType = (data) => {
       noiseCount: noiseCount,
       rodentCount: rodentCount,
       waterCount: waterCount,
+      parkingCount: parkingCount,
       othersCount: othersCount
   };
   }

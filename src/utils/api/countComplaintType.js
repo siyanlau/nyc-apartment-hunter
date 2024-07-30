@@ -1,5 +1,5 @@
 export const countComplaintType = (data) => {
-    let noiseCount = 0, rodentCount = 0, waterCount = 0, otherCount = 0;
+    let noiseCount = 0, rodentCount = 0, waterCount = 0, parkingCount = 0, othersCount = 0;
     data.forEach(entry => {
       const complaintType = entry.complaint_type.toLowerCase();
       console.log("complaint type: ", complaintType);
@@ -10,7 +10,10 @@ export const countComplaintType = (data) => {
         rodentCount++;
       } else if (complaintType.includes('water')) {
         waterCount++;
-      } else {
+      } else if (complaintType.includes('parking')) {
+        parkingCount++;
+      }
+      else {
         othersCount++;
       }
     });
@@ -19,6 +22,7 @@ export const countComplaintType = (data) => {
       noiseCount: noiseCount,
       rodentCount: rodentCount,
       waterCount: waterCount,
+      parkingCount: parkingCount,
       othersCount: othersCount
   };
   }

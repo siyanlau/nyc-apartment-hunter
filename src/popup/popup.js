@@ -80,9 +80,11 @@ function loadAddresses() {
 
         const counts = item.complaints;
         const complaintItem = document.createElement('p');
-        complaintItem.textContent = `Noise Complaints: ${counts.noiseCount} 
-        \nRodent Complaints: ${counts.rodentCount} \nWater Complaints: ${counts.waterCount}
-        \nOther Complaints: ${counts.othersCount}`;
+        complaintItem.innerHTML = `Noise Complaints: ${counts.noiseCount} <br>
+        Rodent Complaints: ${counts.rodentCount} <br>
+        Water Complaints: ${counts.waterCount} <br>
+        Parking Complaints: ${counts.parkingCount} <br>
+        Other Complaints: ${counts.othersCount}`; 
         addressDiv.appendChild(complaintItem);
 
         const ethnicity = document.createElement('p');
