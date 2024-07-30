@@ -1,6 +1,5 @@
 import { getSyncStorage, setSyncStorage, addressFormatter, parseAddress } from "../utils/utils.js"
 import { nearbySubway } from "../utils/api/nearbySubway.js";
-import { commuteDurantion } from "../utils/api/commuteDuration.js";
 
 const addressForm = document.getElementById('addressForm')
 const destinationForm = document.getElementById('destinationForm');
@@ -19,22 +18,17 @@ addressForm.addEventListener('submit', (e) => {
 
       // Now that we have the address, we can start sending the message
       console.log("1. Starting to send message (new address)...");
-      return chrome.runtime.sendMessage({ action: 'addAddress', address: address, zipcode: zipcode, formattedAddress: formattedAddress })
+      return chrome.runtime.sendMessage({ action: 'addAddress', address: address, zipcode: zipcode, formattedAddress: formattedAddress, placeId: placeId })
     })
     .then(response => {
       if (response) {
         document.getElementById('addressInput').value = ''; // clear the input field
         console.log("8. Message sent successfully and response received: ", response);
         console.log("9. Now starting to calculate commute distance...");
+        loadAddresses();
       } else {
         console.log("No response received", response);
       }
-      const commute_data = commuteDurantion(placeId, destinationId, "transit");
-      return commute_data;
-    })
-    .then(commute_data => {
-      console.log(commute_data);
-      loadAddresses();
     })
     .catch((error) => {
       console.error('Error processing address:', error);

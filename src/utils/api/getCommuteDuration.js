@@ -2,7 +2,7 @@ import CONFIG from "../../config.js"
 
 const apiKey = CONFIG.GOOGLE_KEY;
 
-export const commuteDurantion = (start_id, dest_id, method) => {
+export const getCommuteDuration = (start_id, dest_id, method) => {
     const departureTimestamp = getFutureTimestamp(10, 0);
     const url = `https://maps.googleapis.com/maps/api/directions/json?destination=place_id:${dest_id}&origin=place_id:${start_id}&key=${apiKey}&mode=${method}&departure_time=${departureTimestamp}`;
 
@@ -37,3 +37,4 @@ function getFutureTimestamp(hour, minute) {
     // Convert the date to a Unix timestamp (seconds since Jan 1, 1970)
     return Math.floor(futureTime.getTime() / 1000);
   }
+

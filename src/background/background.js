@@ -4,6 +4,7 @@ import { getSyncStorage, setSyncStorage, parseAddress } from "../utils/utils.js"
 import { geocode } from "../utils/api/geocode.js";
 import { getGEOID } from "../utils/api/getGEOID.js";
 import { getDecennial } from "../utils/api/getDecennial.js";
+import { getCommuteDuration } from "../utils/api/getCommuteDuration.js";
 
 
 // the message that's sent to the backend has already been geocoded (in good format)
@@ -48,20 +49,11 @@ const handleAddDestination = async (message) => {
 }
 
 const handleAddAddress = async (message) => {
-  const complaintsSuccess = await fetchAndSetComplaints(message);
-  const demographicsSucess = await fetchAndSetDemographics(message);
-  return complaintsSuccess && demographicsSucess;
-}
-
-const fetchAndSetComplaints = async (message) => {
   const newAddress = message.address;
-  const zipcode = message.zipcode;
-  const formattedAddress = message.formattedAddress;
-  console.log("3. background received new address: ", newAddress);
-  const complaints = await fetchComplaintData(newAddress, zipcode); // rodentCount, noiseCount, etc
-  console.log("5. complaints: ", complaints);
-
-  if (!complaints) return false;
+  const complaints = await fetchComplaints(message);
+  const ethnicity= await fetchDemographics(message);
+  const commuteDuration = await fetchCommuteDuration(message);
+  if (!complaints || !ethnicity || !commuteDuration) return false;
 
   try {
     const data = await getSyncStorage({ addresses: [] });
@@ -69,8 +61,8 @@ const fetchAndSetComplaints = async (message) => {
     const addressExists = addresses.some(item => item.address === newAddress);
 
     if (!addressExists) {
-      addresses.push({ address: newAddress, complaints: complaints }); // Append the new address and its complaints to the existing list
-      await setSyncStorage({ addresses: addresses, complaints: complaints });
+      addresses.push({ address: newAddress, complaints: complaints, ethnicity: ethnicity, commuteDuration: commuteDuration }); // Append the new address and its complaints to the existing list
+      await setSyncStorage({ addresses: addresses });
     }
     console.log("6", data.addresses);
     return true;
@@ -80,41 +72,77 @@ const fetchAndSetComplaints = async (message) => {
   }
 }
 
-const fetchAndSetDemographics = async (message) => {
+const fetchComplaints = async (message) => {
+  const newAddress = message.address;
+  const zipcode = message.zipcode;
+  const formattedAddress = message.formattedAddress;
+  console.log("3. background received new address: ", newAddress);
+  const complaints = await fetchComplaintData(newAddress, zipcode); // rodentCount, noiseCount, etc
+  console.log("5. complaints: ", complaints);
+  return complaints;
+
+  // if (!complaints) return false;
+
+  // try {
+  //   const data = await getSyncStorage({ addresses: [] });
+  //   let addresses = data.addresses;
+  //   const addressExists = addresses.some(item => item.address === newAddress);
+
+  //   if (!addressExists) {
+  //     addresses.push({ address: newAddress, complaints: complaints }); // Append the new address and its complaints to the existing list
+  //     await setSyncStorage({ addresses: addresses, complaints: complaints });
+  //   }
+  //   console.log("6", data.addresses);
+  //   return true;
+  // } catch (error) {
+  //   console.error("Error accessing storage:", error);
+  //   return false;
+  // }
+}
+
+const fetchDemographics = async (message) => {
   // message contains address data. first find the block group id. then feed the id into `getDecennial`
   const address = message.address;
   const formattedAddress = message.formattedAddress;
   const { blockGEOID, blockGroupGEOID } = await getGEOID(formattedAddress);
   // console.log("blockGEOID", blockGEOID);
   const ethnicityComp = await getDecennial(blockGroupGEOID);
-  
-  try {
-    // Retrieve existing addresses from sync storage
-    const data = await getSyncStorage({ addresses: [] });
-    let addresses = data.addresses;
+  return ethnicityComp;
 
-    // Check if the address already exists in the storage
-    const addressIndex = addresses.findIndex(item => item.address === address);
+  // try {
+  //   // Retrieve existing addresses from sync storage
+  //   const data = await getSyncStorage({ addresses: [] });
+  //   let addresses = data.addresses;
 
-    // fetchAndSetComplaints gets executed first, so the address should already exist. 
-    if (addressIndex === -1) {
-      // If the address does not exist, add it
-      addresses.push({
-        address: address,
-        ethnicity: ethnicityComp
-      });
-    } else {
-      // If the address exists, update its ethnicity composition data
-      addresses[addressIndex].ethnicity = ethnicityComp;
-    }
+  //   // Check if the address already exists in the storage
+  //   const addressIndex = addresses.findIndex(item => item.address === address);
 
-    // Save the updated addresses back to sync storage
-    await setSyncStorage({ addresses: addresses });
-    console.log("Updated addresses in storage:", addresses);
+  //   // fetchAndSetComplaints gets executed first, so the address should already exist. 
+  //   if (addressIndex === -1) {
+  //     // If the address does not exist, add it
+  //     addresses.push({
+  //       address: address,
+  //       ethnicity: ethnicityComp
+  //     });
+  //   } else {
+  //     // If the address exists, update its ethnicity composition data
+  //     addresses[addressIndex].ethnicity = ethnicityComp;
+  //   }
 
-    return true;
-  } catch (error) {
-    console.error("Error accessing storage:", error);
-    return false;
-  }
+  //   // Save the updated addresses back to sync storage
+  //   await setSyncStorage({ addresses: addresses });
+  //   console.log("Updated addresses in storage:", addresses);
+
+  //   return true;
+  // } catch (error) {
+  //   console.error("Error accessing storage:", error);
+  //   return false;
+  // }
+}
+
+const fetchCommuteDuration = async (message) => {
+  const placeId = message.placeId;
+  const destinationId = "ChIJ85aDTUpawokR95FkWT0xm9o"; // this is Tandon, or 6 MetroTech. Default value.
+  const commuteDuration = await getCommuteDuration(placeId, destinationId, "transit");
+  return commuteDuration;
 }
