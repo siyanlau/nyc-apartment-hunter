@@ -59,26 +59,34 @@ function loadAddresses() {
       const addressList = document.getElementById('addressList');
       addressList.innerHTML = '';
       console.log("11 starting forEach loop ");
+      
       addresses.forEach((item) => {
         const li = document.createElement('li');
-        // li.textContent = item.address;
-        const complaintsDiv = document.createElement('div');
-        complaintsDiv.classList.add('complaints');
-        complaintsDiv.innerHTML = `<h3>Complaints for ${item.address}</h3>`;
-        // item.complaints.forEach(complaint => {
+        
+        const addressDiv = document.createElement('div');
+        addressDiv.classList.add('address');
+        addressDiv.innerHTML = `<h3>Data for ${item.address}</h3>`;
+        
         const counts = item.complaints;
         const complaintItem = document.createElement('p');
         complaintItem.textContent = `Noise Complaints: ${counts.noiseCount} 
         \nRodent Complaints: ${counts.rodentCount} \nWater Complaints: ${counts.waterCount}
         \nOther Complaints: ${counts.othersCount}`;
-        complaintsDiv.appendChild(complaintItem);
-        // });
+        addressDiv.appendChild(complaintItem);
 
-        li.appendChild(complaintsDiv);
+        const ethnicity = document.createElement('p');
+        ethnicity.innerHTML = `
+        White: ${item.ethnicity.whitePercentage}<br>
+        Black: ${item.ethnicity.blackPercentage}<br>
+        Asian: ${item.ethnicity.asianPercentage}<br>
+        Hispanic: ${item.ethnicity.hispanicPercentage}`;
+        
+        li.appendChild(addressDiv);
+        li.appendChild(ethnicity);
         addressList.appendChild(li);
       });
     })
     .catch(error => {
-      console.error("Error handling addAddress:", error);
+      console.error("Error handling loadAddresses:", error);
     });
 }

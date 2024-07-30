@@ -50,7 +50,7 @@ const handleAddDestination = async (message) => {
 const handleAddAddress = async (message) => {
   const complaintsSuccess = await fetchAndSetComplaints(message);
   const demographicsSucess = await fetchAndSetDemographics(message);
-  return complaintsSuccess;
+  return complaintsSuccess && demographicsSucess;
 }
 
 const fetchAndSetComplaints = async (message) => {
@@ -82,10 +82,39 @@ const fetchAndSetComplaints = async (message) => {
 
 const fetchAndSetDemographics = async (message) => {
   // message contains address data. first find the block group id. then feed the id into `getDecennial`
+  const address = message.address;
   const formattedAddress = message.formattedAddress;
-  const {blockGEOID, blockGroupGEOID} = await getGEOID(formattedAddress);
+  const { blockGEOID, blockGroupGEOID } = await getGEOID(formattedAddress);
   // console.log("blockGEOID", blockGEOID);
   const ethnicityComp = await getDecennial(blockGroupGEOID);
-  console.log("!!ethnicity data: ", ethnicityComp);
-  return true;
+  
+  try {
+    // Retrieve existing addresses from sync storage
+    const data = await getSyncStorage({ addresses: [] });
+    let addresses = data.addresses;
+
+    // Check if the address already exists in the storage
+    const addressIndex = addresses.findIndex(item => item.address === address);
+
+    // fetchAndSetComplaints gets executed first, so the address should already exist. 
+    if (addressIndex === -1) {
+      // If the address does not exist, add it
+      addresses.push({
+        address: address,
+        ethnicity: ethnicityComp
+      });
+    } else {
+      // If the address exists, update its ethnicity composition data
+      addresses[addressIndex].ethnicity = ethnicityComp;
+    }
+
+    // Save the updated addresses back to sync storage
+    await setSyncStorage({ addresses: addresses });
+    console.log("Updated addresses in storage:", addresses);
+
+    return true;
+  } catch (error) {
+    console.error("Error accessing storage:", error);
+    return false;
+  }
 }
