@@ -60,6 +60,10 @@ function loadAddresses() {
         const addressDiv = document.createElement('div');
         addressDiv.classList.add('address');
         addressDiv.innerHTML = `<h3>Data for ${item.address}</h3>`;
+
+        const commute = document.createElement('p');
+        commute.textContent = `Commute time to destination is ${item.commuteDuration.text}`;
+        addressDiv.appendChild(commute);
         
         const counts = item.complaints;
         const complaintItem = document.createElement('p');
