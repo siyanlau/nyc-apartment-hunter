@@ -111,17 +111,11 @@ function loadDestination() {
   .then((data) => {
     const destinationAddress = data.destination.destinationAddress;
     console.log("10. destination stored in background: ", destinationAddress);
-    
-    // Select the element where the destination will be displayed
+
     const destinationDisplay = document.getElementById('destinationDisplay');
-    
-    // Clear any existing content
-    destinationDisplay.innerHTML = '';
 
     // Create and append new content
-    const destinationDiv = document.createElement('div');
-    destinationDiv.innerHTML = `<h4>Your destination is set to: ${destinationAddress}</h4>`;
-    destinationDisplay.appendChild(destinationDiv);
+    destinationDisplay.innerHTML = `<h4>Your destination is set to: ${destinationAddress}</h4>`;
   })
   .catch(error => {
     console.error("Error loading destination:", error);
