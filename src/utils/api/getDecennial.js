@@ -34,9 +34,27 @@ export async function getDecennial(blockGroupGEOID, apiKey) {
 
         // Parse the JSON
         const data = JSON.parse(responseBody);
-        return data;
+        const ethnicityComp = ethnicityComposition(data);
+        return ethnicityComp;
     } catch (error) {
         console.error('Error fetching the racial composition from Decennial Census:', error);
         throw error;
     }
+}
+
+const ethnicityComposition = (data) => {
+    const total = parseInt(data[1][0]);
+
+    // Convert each count to a percentage and format it
+    const whitePercentage = ((parseInt(data[1][1]) / total) * 100).toFixed(1);
+    const blackPercentage = ((parseInt(data[1][2]) / total) * 100).toFixed(1);
+    const asianPercentage = ((parseInt(data[1][3]) / total) * 100).toFixed(1);
+    const hispanicPercentage = ((parseInt(data[1][4]) / total) * 100).toFixed(1);
+
+    return {
+        whitePercentage: `${whitePercentage}%`, 
+        blackPercentage: `${blackPercentage}%`, 
+        asianPercentage: `${asianPercentage}%`, 
+        hispanicPercentage: `${hispanicPercentage}%`
+    };
 }
