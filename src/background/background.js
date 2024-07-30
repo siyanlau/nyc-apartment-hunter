@@ -51,8 +51,11 @@ const handleAddDestination = async (message) => {
 
     // Store the new destination in sync storage, overwriting the old one
     await setSyncStorage({ destination: { destinationAddress: formattedAddress, destinationId: destinationId } });
-
     console.log("Destination added successfully:", { destinationAddress: formattedAddress, destinationId: destinationId });
+    
+    // Clear all addresses data in sync storage
+    await setSyncStorage({ addresses: [] });
+    console.log("Cleared all addresses data");
 
     return true;
   } catch (error) {

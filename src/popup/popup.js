@@ -42,7 +42,9 @@ destinationForm.addEventListener('submit', (e) => {
   chrome.runtime.sendMessage({ action: 'addDestination', destination: destinationInput })
     .then(response => {
       if (response) {
+        document.getElementById('destinationInput').value = ''; // clear the input field
         loadDestination();
+        loadAddresses();
       }
       else {
         console.log("destination adding was not successful");
