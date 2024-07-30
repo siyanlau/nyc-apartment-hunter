@@ -21,6 +21,7 @@ The extension will fetch and display complaints, ethnicity composition, and comm
 4. Caution! If you enter a new destination, all the currently stored addresses will be gone, since commute time needs to be re-calculated. 
 
 ### File Structure
+```
 nyc-apartment-hunter/  
 |-- src/  
 |   |-- background/  
@@ -33,18 +34,18 @@ nyc-apartment-hunter/
 |   |-- utils/   
 |   |   |-- utils.js  
 |   |   |-- api/  
-|   |       |-- fetchComplaintData.js  
-|   |       |-- geocode.js  
-|   |       |-- getCommuteDuration.js  
-|   |       |-- getDecennial.js  
-|   |       |-- getGEOID.js  
-|   |       |-- nearbySubway.js  
+|   |   |   |-- fetchComplaintData.js  
+|   |   |   |-- geocode.js  
+|   |   |   |-- getCommuteDuration.js  
+|   |   |   |-- getDecennial.js  
+|   |   |   |-- getGEOID.js  
+|   |   |   |-- nearbySubway.js  
 |   |-- content.js   
 |   |-- config.js  
 |   |-- manifest.json   
 |-- package.json  
 |-- README.md  
-
+```
 
 ### Default Settings
 1. Commute departure time is set to 10:00 am next day. 
