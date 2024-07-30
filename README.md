@@ -2,6 +2,8 @@
 ### Description
 NYC Apartment Hunter is a Chrome extension that helps users gather and analyze information about various addresses in New York City. Users can add addresses to see past 311 complaints, ethnicity composition, and commute times to a specified destination.
 
+![Popup Interface](screenshot.png)
+
 ### Features
 - Add and view addresses along with associated complaints data and ethnicity composition of the block group (the ~6 blocks that are immediately adjacent to your block).  
 - Set a destination and calculate commute times from addresses to the destination. Once a new destination is set, all data associated with individual addresses will be cleared. The default address is NYU Tandon, 6 Metrotech Center, located in the heart of downtown Brooklyn.  
