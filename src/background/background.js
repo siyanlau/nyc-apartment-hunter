@@ -66,7 +66,7 @@ const handleAddDestination = async (message) => {
 
 const handleAddAddress = async (message) => {
   const newAddress = message.address;
-  const complaints = await fetchComplaints(message);
+  const [complaints, url] = await fetchComplaints(message);
   const ethnicity= await fetchDemographics(message);
   const commuteDuration = await fetchCommuteDuration(message);
   if (!complaints || !ethnicity || !commuteDuration) {
@@ -82,11 +82,11 @@ const handleAddAddress = async (message) => {
     console.log("address index?? ", addressIndex);
 
     if (addressIndex === -1) {
-      addresses.push({ address: newAddress, complaints: complaints, ethnicity: ethnicity, commuteDuration: commuteDuration }); // Append the new address and its complaints to the existing list
+      addresses.push({ address: newAddress, complaints: complaints, ethnicity: ethnicity, commuteDuration: commuteDuration, url: url }); // Append the new address and its complaints to the existing list
     }
     else {
       // replace the old record with the new one
-      addresses[addressIndex] = { address: newAddress, complaints: complaints, ethnicity: ethnicity, commuteDuration: commuteDuration };
+      addresses[addressIndex] = { address: newAddress, complaints: complaints, ethnicity: ethnicity, commuteDuration: commuteDuration, url: url };
     }
     await setSyncStorage({ addresses: addresses });
 
@@ -103,27 +103,9 @@ const fetchComplaints = async (message) => {
   const zipcode = message.zipcode;
   const formattedAddress = message.formattedAddress;
   console.log("3. background received new address: ", newAddress);
-  const complaints = await fetchComplaintData(newAddress, zipcode); // rodentCount, noiseCount, etc
+  const [complaints, url] = await fetchComplaintData(newAddress, zipcode); // rodentCount, noiseCount, etc
   console.log("5. complaints: ", complaints);
-  return complaints;
-
-  // if (!complaints) return false;
-
-  // try {
-  //   const data = await getSyncStorage({ addresses: [] });
-  //   let addresses = data.addresses;
-  //   const addressExists = addresses.some(item => item.address === newAddress);
-
-  //   if (!addressExists) {
-  //     addresses.push({ address: newAddress, complaints: complaints }); // Append the new address and its complaints to the existing list
-  //     await setSyncStorage({ addresses: addresses, complaints: complaints });
-  //   }
-  //   console.log("6", data.addresses);
-  //   return true;
-  // } catch (error) {
-  //   console.error("Error accessing storage:", error);
-  //   return false;
-  // }
+  return [complaints, url];
 }
 
 const fetchDemographics = async (message) => {

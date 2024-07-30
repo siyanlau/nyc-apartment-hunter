@@ -73,7 +73,7 @@ function loadAddresses() {
 
         const addressDiv = document.createElement('div');
         addressDiv.classList.add('address');
-        addressDiv.innerHTML = `<h3>Data for ${item.address}</h3>`;
+        addressDiv.innerHTML = `<h3><a href=${item.url} target="_blank">Data</a> for ${item.address}</h3>`;
 
         const commute = document.createElement('p');
         commute.textContent = `Commute time to destination is ${item.commuteDuration.text}`;

@@ -1,9 +1,10 @@
 // const endpoint = 'https://data.cityofnewyork.us/resource/jrb2-thup.json?incident_address=';
-const endpoint = 'https://data.cityofnewyork.us/resource/erm2-nwe9.json?incident_address=';
+export const endpoint = 'https://data.cityofnewyork.us/resource/erm2-nwe9.json?incident_address=';
 
 export default async function fetchComplaintData(address, zipcode) {
     try {
-        const response = await fetch(endpoint + encodeURIComponent(address) + "&incident_zip=" + zipcode);
+        const url = endpoint + encodeURIComponent(address) + "&incident_zip=" + zipcode;
+        const response = await fetch(url);
 
         if (!response.ok) {
             console.log("NYC open data response was not ok");
@@ -16,7 +17,7 @@ export default async function fetchComplaintData(address, zipcode) {
         const complaintsCount = countComplaintType(data);
         // const simplifiedData = data.map(complaint => ({ descriptor: complaint.descriptor, date: complaint.created_date }));
         console.log("complaints data returned by fetchComplaintData: ", complaintsCount);
-        return complaintsCount;
+        return [complaintsCount, url];
     } catch (error) {
         console.error('There was a problem with fetching from NYC open data: ', error);
         return null; // or handle the error in a way appropriate for your application
