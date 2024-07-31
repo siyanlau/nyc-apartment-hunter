@@ -1,5 +1,5 @@
 import fetchComplaintData from "../utils/api/fetchComplaintData.js"
-import './contextMenu.js';
+// import './contextMenu.js';
 import { getSyncStorage, setSyncStorage, parseAddress } from "../utils/utils.js"
 import { geocode } from "../utils/api/geocode.js";
 import { getGEOID } from "../utils/api/getGEOID.js";
