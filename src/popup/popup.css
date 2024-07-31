@@ -6,7 +6,7 @@ body, h1, form, input, button, div, ul, li, p {
 
 #addressList {
   overflow-y: auto; /* Ensure the content can scroll */
-  padding-bottom: 10px; /* Ensure there's enough space at the bottom */
+  padding-bottom: 0px; /* Ensure there's enough space at the bottom */
 }
 
 /* Set a basic font and background color */
@@ -99,4 +99,19 @@ ul.no-bullet li {
 
 .footer a:hover {
   text-decoration: underline;
+}
+
+.remove-button {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+.remove-button:hover {
+  background-color: #ff1a1a;
 }

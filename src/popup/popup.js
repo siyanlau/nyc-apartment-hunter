@@ -69,16 +69,16 @@ function loadAddresses() {
 
       addresses.forEach((item) => {
         const li = document.createElement('li');
-        li.classList.add('no-bullet'); // remove bullet points and indentation
-
+        li.classList.add('no-bullet');
+      
         const addressDiv = document.createElement('div');
         addressDiv.classList.add('address');
-        addressDiv.innerHTML = `<h3><a href=${item.url} target="_blank">Data</a> for ${item.address}</h3>`;
-
+        addressDiv.innerHTML = `<h3><a href=${item.url}>Data</a> for ${item.address}</h3>`;
+      
         const commute = document.createElement('p');
         commute.textContent = `Commute time to destination is ${item.commuteDuration.text}`;
         addressDiv.appendChild(commute);
-
+      
         const counts = item.complaints;
         const complaintItem = document.createElement('p');
         complaintItem.innerHTML = `Noise Complaints: ${counts.noiseCount} <br>
@@ -88,18 +88,26 @@ function loadAddresses() {
         Parking Complaints: ${counts.parkingCount} <br>
         Other Complaints: ${counts.othersCount}`; 
         addressDiv.appendChild(complaintItem);
-
+      
         const ethnicity = document.createElement('p');
         ethnicity.innerHTML = `
         White: ${item.ethnicity.whitePercentage}<br>
         Black: ${item.ethnicity.blackPercentage}<br>
         Asian: ${item.ethnicity.asianPercentage}<br>
         Hispanic: ${item.ethnicity.hispanicPercentage}`;
-
+      
+        const removeButton = document.createElement('button');
+        removeButton.textContent = 'Remove';
+        removeButton.classList.add('remove-button');
+        removeButton.addEventListener('click', () => {
+          removeAddress(item.address);
+        });
+      
         li.appendChild(addressDiv);
         li.appendChild(ethnicity);
+        li.appendChild(removeButton);
         addressList.appendChild(li);
-      });
+      });      
     })
     .catch(error => {
       console.error("Error handling loadAddresses:", error);
@@ -120,4 +128,17 @@ function loadDestination() {
   .catch(error => {
     console.error("Error loading destination:", error);
   });
+}
+
+
+async function removeAddress(addressToRemove) {
+  try {
+    const data = await getSyncStorage({ addresses: [] });
+    let addresses = data.addresses;
+    addresses = addresses.filter(item => item.address !== addressToRemove);
+    await setSyncStorage({ addresses: addresses });
+    loadAddresses(); // Refresh the address list
+  } catch (error) {
+    console.error("Error removing address:", error);
+  }
 }
