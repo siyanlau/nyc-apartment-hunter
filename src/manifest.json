@@ -13,9 +13,6 @@
     "activeTab",
     "contextMenus"
   ],
-  "host_permissions": [
-    "*://maps.googleapis.com/*"
-  ],
   "background": {
     "service_worker": "background/background.js",
     "type": "module"
