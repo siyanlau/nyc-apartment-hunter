@@ -22,6 +22,11 @@ Currently, this extension has yet to be published to the Chrome Store. You can s
 The extension will fetch and display complaints, ethnicity composition, and commute time for the added address.
 4. Caution! If you enter a new destination, all the currently stored addresses will be gone, since commute time needs to be re-calculated. 
 
+### Data Sources
+- Commute distance/time data from https://maps.googleapis.com/  
+- 311 Complaints data from NYC Open Data: https://data.cityofnewyork.us/Social-Services/  311-Service-Requests-from-2010-to-Present/erm2-nwe9/data  
+- Demographics data from United States Census Bureau, Decennial Census 2020: https://www.census.gov/data/developers/data-sets/decennial-census.html  
+
 ### File Structure
 ```
 nyc-apartment-hunter/  

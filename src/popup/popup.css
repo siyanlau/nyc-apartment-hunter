@@ -4,6 +4,11 @@ body, h1, form, input, button, div, ul, li, p {
   box-sizing: border-box;
 }
 
+#addressList {
+  overflow-y: auto; /* Ensure the content can scroll */
+  padding-bottom: 10px; /* Ensure there's enough space at the bottom */
+}
+
 /* Set a basic font and background color */
 body {
   font-family: Arial, sans-serif;
